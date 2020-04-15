@@ -54,6 +54,45 @@ abstract class BinaryTree<T> extends Tree<T> {
       yield right;
     }
   }
+
+  /**
+   * Generate an inorder iteration of positions in the tree.
+   */
+  *inorder(): IterableIterator<Position<T>> {
+    if (!this.isEmpty()) {
+      for (const position of this._subtree_inorder(this.root()!)) {
+        yield position;
+      }
+    }
+  }
+
+  /**
+   * Generate an inorder iteration of positions in subtree rooted at position.
+   * @param position
+   */
+  private *_subtree_inorder(
+    position: Position<T>
+  ): IterableIterator<Position<T>> {
+    if (this.left(position) !== null) {
+      for (const grandChildren of this._subtree_inorder(this.left(position)!)) {
+        yield grandChildren;
+      }
+    }
+    yield position;
+    if (this.right(position) !== null) {
+      for (const grandChildren of this._subtree_inorder(
+        this.right(position)!
+      )) {
+        yield grandChildren;
+      }
+    }
+  }
+
+  *positions(): IterableIterator<Position<T>> {
+    for (const position of this.inorder()) {
+      yield position;
+    }
+  }
 }
 
 export default BinaryTree;

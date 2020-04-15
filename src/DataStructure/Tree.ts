@@ -1,4 +1,5 @@
 import Position from './Position';
+import ArrayQueue from './ArrayQueue';
 
 abstract class Tree<T> {
   /**
@@ -70,7 +71,7 @@ abstract class Tree<T> {
    */
   *[Symbol.iterator](): IterableIterator<T> {
     for (const position of this.positions()) {
-      yield position.element as T;
+      yield position.element!;
     }
   }
 
@@ -157,6 +158,20 @@ abstract class Tree<T> {
       }
     }
     yield p;
+  }
+
+  *breadthfirst(): IterableIterator<Position<T>> {
+    if (!this.isEmpty()) {
+      const queue: ArrayQueue<Position<T>> = new ArrayQueue();
+      queue.enqueue(this.root()!);
+      while (!queue.isEmpty()) {
+        const position: Position<T> = queue.dequeue()!;
+        yield position;
+        for (const children of this.children(position)) {
+          queue.enqueue(children);
+        }
+      }
+    }
   }
 }
 

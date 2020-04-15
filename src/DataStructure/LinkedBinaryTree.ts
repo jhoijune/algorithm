@@ -71,7 +71,7 @@ class LinkedBinaryTree<T> extends BinaryTree<T> {
    * @param left
    * @param right
    */
-  protected createNode(
+  protected _createNode(
     element: T,
     parent?: Node<T>,
     left?: Node<T>,
@@ -87,7 +87,7 @@ class LinkedBinaryTree<T> extends BinaryTree<T> {
    * @throws {Error} if argument p is not Position type
    * @throws {Error} if Position p is no longer in the tree.
    */
-  protected validate(p: Position<T>): Node<T> {
+  protected _validate(p: Position<T>): Node<T> {
     if (!(p instanceof Node)) {
       throw Error('Not valid position type');
     }
@@ -109,10 +109,7 @@ class LinkedBinaryTree<T> extends BinaryTree<T> {
    * Returns the root Position of the tree
    */
   root(): Position<T> | null {
-    if (this._root === null) {
-      return this._root;
-    }
-    return this._root as Position<T>;
+    return this._root;
   }
 
   /**
@@ -120,12 +117,9 @@ class LinkedBinaryTree<T> extends BinaryTree<T> {
    * @param p
    */
   parent(p: Position<T>): Position<T> | null {
-    const node: Node<T> = this.validate(p);
+    const node: Node<T> = this._validate(p);
     const parent: Node<T> | null = node.parent;
-    if (parent === null) {
-      return parent;
-    }
-    return parent as Position<T>;
+    return parent;
   }
 
   /**
@@ -133,7 +127,7 @@ class LinkedBinaryTree<T> extends BinaryTree<T> {
    * @param p
    */
   left(p: Position<T>): Position<T> | null {
-    const node: Node<T> = this.validate(p);
+    const node: Node<T> = this._validate(p);
     const left: Node<T> | null = node.left;
     if (left === null) {
       return left;
@@ -146,7 +140,7 @@ class LinkedBinaryTree<T> extends BinaryTree<T> {
    * @param p
    */
   right(p: Position<T>): Position<T> | null {
-    const node: Node<T> = this.validate(p);
+    const node: Node<T> = this._validate(p);
     const right: Node<T> | null = node.right;
     if (right === null) {
       return right;
@@ -163,7 +157,7 @@ class LinkedBinaryTree<T> extends BinaryTree<T> {
     if (!this.isEmpty()) {
       throw Error('Tree is not empty');
     }
-    this._root = this.createNode(element);
+    this._root = this._createNode(element);
     this._size = 1;
     return this._root as Position<T>;
   }
@@ -175,28 +169,28 @@ class LinkedBinaryTree<T> extends BinaryTree<T> {
    * @throws {Error} if Position p already has a left child
    */
   addLeft(parent: Position<T>, element: T): Position<T> {
-    const node: Node<T> = this.validate(parent);
+    const node: Node<T> = this._validate(parent);
     if (node.left !== null) {
       throw Error('p already has a left child');
     }
-    const child: Node<T> = this.createNode(element, node);
+    const child: Node<T> = this._createNode(element, node);
     node.left = child;
     this._size += 1;
     return child as Position<T>;
   }
 
   /**
-   * Creates a new right child of Position p storing element e; returns its Position
+   * Creates a new right child of Position p storing element; returns its Position
    * @param parent
    * @param element
    * @throws {Error} if p already has a right child
    */
   addRight(parent: Position<T>, element: T): Position<T> {
-    const node: Node<T> = this.validate(parent);
+    const node: Node<T> = this._validate(parent);
     if (node.right !== null) {
       throw Error('p already has a right child');
     }
-    const child: Node<T> = this.createNode(element, node);
+    const child: Node<T> = this._createNode(element, node);
     node.right = child;
     this._size += 1;
     return child as Position<T>;
@@ -208,7 +202,7 @@ class LinkedBinaryTree<T> extends BinaryTree<T> {
    * @param element
    */
   set(p: Position<T>, element: T): T | null {
-    const node: Node<T> = this.validate(p);
+    const node: Node<T> = this._validate(p);
     const exElement: T | null = node.element;
     node.element = element;
     return exElement;
@@ -225,11 +219,11 @@ class LinkedBinaryTree<T> extends BinaryTree<T> {
     t1: LinkedBinaryTree<T>,
     t2: LinkedBinaryTree<T>
   ): void {
-    const node: Node<T> = this.validate(p);
     if (this.isInternal(p)) {
       throw Error('p must be a leaf');
     }
-    this._size = t1.size() + t2.size();
+    const node: Node<T> = this._validate(p);
+    this._size += t1.size() + t2.size();
     if (!t1.isEmpty()) {
       t1._root!.parent = node;
       node.left = t1._root;
@@ -247,12 +241,13 @@ class LinkedBinaryTree<T> extends BinaryTree<T> {
   /**
    * Removes the node at Position p and replaces it with its child, if any.
    * @param p
+   * @throws {Error} if position has two children.
    */
   remove(p: Position<T>) {
-    const node: Node<T> = this.validate(p);
     if (this.numChildren(p) === 2) {
       throw Error('p has two children');
     }
+    const node: Node<T> = this._validate(p);
     const child: Node<T> | null = node.left !== null ? node.left : node.right;
     const parent: Node<T> | null = node.parent;
     if (child !== null) {
