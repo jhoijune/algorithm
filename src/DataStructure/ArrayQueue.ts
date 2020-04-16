@@ -48,11 +48,12 @@ class ArrayQueue<T> implements Queue<T> {
    */
   private _resize(capacity: number): void {
     const old: (T | null)[] = this._data;
+    const oldLen: number = old.length;
     this._data = Array(capacity);
     let walk: number = this._front;
     for (const index of _.range(this._size)) {
       this._data[index] = old[walk];
-      walk = (1 + walk) % this._size;
+      walk = (1 + walk) % oldLen;
     }
     this._front = 0;
   }
