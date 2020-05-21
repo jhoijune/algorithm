@@ -4,7 +4,7 @@
  * @param right
  * @param isAscending
  */
-const isNormal = (
+const isSorted = (
   left: number,
   right: number,
   isAscending: boolean = true
@@ -15,5 +15,5 @@ const isNormal = (
   return left > right;
 };
 
-export default isNormal;
-export { isNormal };
+export default isSorted;
+export { isSorted };
