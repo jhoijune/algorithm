@@ -1,5 +1,6 @@
 // 내 버전 O(n)
 const rotateArray1 = (arr: number[], count: number): number[] => {
+  // 왼쪽으로 회전함
   const size = arr.length;
   const newCount = count % size;
   const left = arr.slice(newCount);
@@ -13,8 +14,6 @@ const test1 = () => {
   const result = rotateArray1(numbers, 4);
   console.log(result);
 };
-
-test1();
 
 // 책버전 발상이 독특함
 
@@ -41,3 +40,5 @@ const test2 = () => {
   // [5,6,7,8,9,10,1,2,3,4];
   console.log(numbers);
 };
+
+export { rotateArray1 };
