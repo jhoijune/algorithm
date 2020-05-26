@@ -8,7 +8,7 @@ const minabsSumPair = (arr: number[]) => {
   // space complexity O(n)
   const size = arr.length;
   if (size < 2) {
-    throw Error('Array length must be greater than 2');
+    throw Error('Array length must be greater than 1');
   }
   const sorted = [...arr].sort((a, b) => a - b);
   let minFirst = 0;

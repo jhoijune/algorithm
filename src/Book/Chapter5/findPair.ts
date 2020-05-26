@@ -5,7 +5,7 @@ import { createRandomArray } from '../../Util';
 const findPair1 = (arr: number[], value: number): boolean => {
   const size = arr.length;
   if (size < 2) {
-    throw Error('Array length must be greater than 2');
+    throw Error('Array length must be greater than 1');
   }
   const sorted = [...arr].sort((a, b) => a - b);
   for (let left = 0, right = size - 1; left < right; ) {
@@ -25,7 +25,7 @@ const findPair1 = (arr: number[], value: number): boolean => {
 const findPair2 = (arr: number[], value: number) => {
   const size = arr.length;
   if (size < 2) {
-    throw Error('Array length must be greater than 2');
+    throw Error('Array length must be greater than 1');
   }
   const ht: Map<number, number> = new Map();
   for (const num of arr) {

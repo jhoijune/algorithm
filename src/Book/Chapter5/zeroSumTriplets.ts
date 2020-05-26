@@ -1,0 +1,27 @@
+// Given an array of integers, you need to find a triplet whose sum 0.
+
+const zeroSumTriplets = (arr: number[]) => {
+  // time complexity O(n^2)
+  // space complexity O(n)
+  const size = arr.length;
+  if (size < 3) {
+    throw Error('Array length must be greater than 2');
+  }
+  const sorted = [...arr].sort((a, b) => a - b);
+  for (let first = 0; first < size - 2; first++) {
+    let second = first + 1;
+    let third = size - 1;
+    while (second < third) {
+      const currentSum = sorted[first] + sorted[second] + sorted[third];
+      if (currentSum === 0) {
+        console.log(`(${sorted[first]},${sorted[second]},${sorted[third]})`);
+        return true;
+      } else if (currentSum < 0) {
+        second += 1;
+      } else {
+        third -= 1;
+      }
+    }
+  }
+  return false;
+};

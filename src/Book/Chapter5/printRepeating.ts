@@ -41,8 +41,8 @@ const printRepeating2 = (arr: number[]) => {
 };
 
 const printRepeating3 = (arr: number[]) => {
-  // time complexity: o(nlogn)
-  // space complexity: o(n)
+  // time complexity: O(nlogn)
+  // space complexity: O(n)
   const sorted = [...arr].sort((a, b) => a - b);
   let exValue: number | null = null;
   let count: number = 0;
