@@ -1,39 +1,17 @@
-class Stack<T> {
-  private _data: T[] = [];
-
+abstract class Stack<T> {
   /**
    * Add element to the top of the stack.
    * @param {T} element
    */
-  push(element: T) {
-    this._data.push(element);
-  }
+  abstract push(element: T): this;
 
-  /**
-   * Remove and return the element from the top of the stack (i.e.,LIFO)
-   *  @throws {Error} if the stack is empty.
-   */
-  pop(): T {
-    if (this.isEmpty()) {
-      throw Error('Stack is Empty');
-    }
-    return this._data.pop()!;
-  }
+  abstract pop(): T;
 
-  top(): T {
-    if (this.isEmpty()) {
-      throw Error('Stack is Empty');
-    }
-    return this._data[this._data.length - 1];
-  }
+  abstract top(): T;
 
-  size(): number {
-    return this._data.length;
-  }
+  abstract isEmpty(): boolean;
 
-  isEmpty(): boolean {
-    return this._data.length === 0;
-  }
+  abstract size(): number;
 }
 
 export default Stack;

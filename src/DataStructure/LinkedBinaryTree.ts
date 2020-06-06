@@ -56,7 +56,7 @@ class Node<T> implements Position<T> {
 class LinkedBinaryTree<T> extends BinaryTree<T> {
   protected _root: Node<T> | null;
 
-  private _size: number;
+  protected _size: number;
 
   constructor() {
     super();
@@ -273,3 +273,4 @@ class LinkedBinaryTree<T> extends BinaryTree<T> {
 }
 
 export default LinkedBinaryTree;
+export { Node };

@@ -1,31 +1,16 @@
 import Queue from './Queue';
 import _ from 'lodash';
 
-class ArrayQueue<T> implements Queue<T> {
+class ArrayQueue<T> extends Queue<T> {
   static DEFAULT_CAPACITY: number = 10;
 
   private _data: (T | null)[]; // generic array used for storage.
 
   private _front: number = 0; // index of the front element
 
-  private _size: number = 0; // current number of elements
-
   constructor(capacity: number = ArrayQueue.DEFAULT_CAPACITY) {
-    this._data = Array(capacity);
-  }
-
-  /**
-   * Returns the number of elements in the queue.
-   */
-  size(): number {
-    return this._size;
-  }
-
-  /**
-   * Tests whether the queue is empty.
-   */
-  isEmpty(): boolean {
-    return this._size === 0;
+    super();
+    this._data = new Array(capacity);
   }
 
   /**
@@ -49,7 +34,7 @@ class ArrayQueue<T> implements Queue<T> {
   private _resize(capacity: number): void {
     const old: (T | null)[] = this._data;
     const oldLen: number = old.length;
-    this._data = Array(capacity);
+    this._data = new Array(capacity);
     let walk: number = this._front;
     for (const index of _.range(this._size)) {
       this._data[index] = old[walk];
