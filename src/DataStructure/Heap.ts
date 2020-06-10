@@ -111,6 +111,26 @@ class Heap<T> implements PriorityQueue<T> {
     this._downheap(0);
     return [item.key, item.value];
   }
+
+  private _bubble(index: number): void {
+    if (index > 0 && this._compare(index, this._parent(index))) {
+      this._upheap(index);
+    } else {
+      this._downheap(index);
+    }
+  }
+
+  update(originalKey: number, originalValue: T, newKey: number) {
+    const size = this._data.length;
+    for (let index = 0; index < size; index++) {
+      const data = this._data[index];
+      if (data.key === originalKey && data.value === originalValue) {
+        data.key = newKey;
+        this._bubble(index);
+        return;
+      }
+    }
+  }
 }
 
 export default Heap;
