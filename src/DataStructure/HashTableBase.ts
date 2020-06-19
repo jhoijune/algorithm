@@ -57,7 +57,7 @@ abstract class HashTableBase<T, U> {
     }
   }
 
-  private _hash_function(key: any): number {
+  private _hashFunction(key: any): number {
     const stringified = JSON.stringify(key);
     let hashCode = 0;
     for (const char of stringified) {
@@ -75,12 +75,12 @@ abstract class HashTableBase<T, U> {
   }
 
   get(key: T): U | null {
-    const num = this._hash_function(key);
+    const num = this._hashFunction(key);
     return this._bucketGetitem(num, key);
   }
 
   has(key: T): boolean {
-    const num = this._hash_function(key);
+    const num = this._hashFunction(key);
     if (this._bucketGetitem(num, key) === null) {
       return false;
     }
@@ -88,7 +88,7 @@ abstract class HashTableBase<T, U> {
   }
 
   set(key: T, value: U) {
-    const num = this._hash_function(key);
+    const num = this._hashFunction(key);
     const isCreated = this._bucketSetitem(num, key, value);
     if (isCreated) {
       this._keys.push(key);
@@ -103,7 +103,7 @@ abstract class HashTableBase<T, U> {
   }
 
   del(key: T): boolean {
-    const num = this._hash_function(key);
+    const num = this._hashFunction(key);
     const isDeleted = this._bucketDelitem(num, key);
     if (isDeleted) {
       const toDelete = this._keys.indexOf(key);

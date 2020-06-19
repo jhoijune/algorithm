@@ -1,5 +1,6 @@
 import ArrayQueue from './ArrayQueue';
 import GeneralTree from './GeneralTree';
+import Heap from './Heap';
 import LinkedBinaryTree from './LinkedBinaryTree';
 import NumberHeap from './NumberHeap';
 import Position from './Position';
@@ -8,9 +9,17 @@ import Position from './Position';
 const union = {
   ArrayQueue,
   GeneralTree,
+  Heap,
   LinkedBinaryTree,
   NumberHeap,
 };
 
 export default union;
-export { ArrayQueue, GeneralTree, LinkedBinaryTree, Position, NumberHeap };
+export {
+  ArrayQueue,
+  GeneralTree,
+  Heap,
+  LinkedBinaryTree,
+  Position,
+  NumberHeap,
+};

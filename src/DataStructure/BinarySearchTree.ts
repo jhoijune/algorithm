@@ -1,6 +1,5 @@
 import LinkedBinaryTree, { Node } from './LinkedBinaryTree';
 import Position from './Position';
-import { threadId } from 'worker_threads';
 
 class BinarySearchTree extends LinkedBinaryTree<number> {
   addRoot(element: number): Position<number> {
