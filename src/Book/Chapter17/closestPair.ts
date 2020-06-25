@@ -1,4 +1,4 @@
-import { combination } from '../../Util';
+import { combinations } from '../../Util';
 
 type CPI = {
   coord: Coordinate;
@@ -26,7 +26,7 @@ const closestPairUtil = (
   } else if (end - start === 2) {
     let dist = Infinity;
     let result: [number, number] = [-1, -1];
-    for (const [e1, e2] of combination(start, start + 2, 2)) {
+    for (const [e1, e2] of combinations([start, start + 1, start + 2], 2)) {
       const temp = calcDist(arr[e1].coord, arr[e2].coord);
       if (temp < dist) {
         dist = temp;

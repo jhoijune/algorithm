@@ -1,6 +1,10 @@
 import {} from 'module';
 
 const solution = (s: string) => {
+  /**
+   * 문자열 압축
+   * time complexity: O(n^2)
+   */
   const size = s.length;
   const maxLen = Math.floor(size / 2);
   let min = size;
@@ -27,5 +31,3 @@ const solution = (s: string) => {
   }
   return min;
 };
-
-console.log(solution('abrabcabcadqabcabc'));

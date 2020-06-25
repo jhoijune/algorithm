@@ -1,3 +1,5 @@
+import {} from 'module';
+
 const solution = (n: number): string => {
   /**
    * 수박수박수박
