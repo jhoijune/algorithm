@@ -2,7 +2,9 @@ import {} from 'module';
 
 const solution = (lines: string[]): number => {
   /**
-   *
+   * 추석 트래픽
+   * time complexity: O(n^2)
+   * space complexity: O(n^2)
    * TODO: 부동소수점,구간 (슬라이딩 윈도우)
    */
   const size = lines.length;
@@ -19,33 +21,25 @@ const solution = (lines: string[]): number => {
     elapsed = elapsed.replace(/\.|s/g, '').padEnd(4, '0');
     modified.push([converted - Number(elapsed) + 1, converted]);
   });
-  for (let index = 0; index < size; index++) {
-    let startNum = 1;
-    let endNum = 1;
-    const [start, end] = modified[index];
-    for (let count = 1; count < size; count++) {
-      const [s, e] = modified[(index + count) % size];
-      if (start <= e && start + 999 >= e) {
-        startNum += 1;
+  for (let i = 0; i < size; i++) {
+    for (const value of modified[i]) {
+      let count = 0;
+      for (let j = 0; j < size; j++) {
+        const [s, e] = modified[j];
+        if (
+          (value <= s && value + 999 >= s) ||
+          (value <= e && value + 999 >= e)
+        ) {
+          count += 1;
+        }
+
+        if (s < value && value + 999 < e) {
+          count += 1;
+        }
       }
-      if (start <= s && start + 999 >= s) {
-        startNum += 1;
+      if (count > answer) {
+        answer = count;
       }
-      if (s < start && start + 999 < e) {
-        startNum += 1;
-      }
-      if (end <= e && end + 999 >= e) {
-        endNum += 1;
-      }
-      if (end <= s && end + 999 >= s) {
-        endNum += 1;
-      }
-      if (s < end && end + 999 < e) {
-        endNum += 1;
-      }
-    }
-    if (Math.max(startNum, endNum) > answer) {
-      answer = Math.max(startNum, endNum);
     }
   }
   return answer;
