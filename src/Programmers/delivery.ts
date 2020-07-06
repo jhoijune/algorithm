@@ -1,7 +1,28 @@
-import PriorityQueue, { Item } from './PriorityQueue';
+import {} from 'module';
 
-class Heap<T> implements PriorityQueue<T> {
+class Item<T> {
+  constructor(private _key: number, private _value: T) {}
+
+  get key(): number {
+    return this._key;
+  }
+
+  get value(): T {
+    return this._value;
+  }
+
+  set key(e: number) {
+    this._key = e;
+  }
+
+  set value(e: T) {
+    this._value = e;
+  }
+}
+
+class Heap<T> {
   private _data: Item<T>[];
+
   private _isMinHeap: boolean;
 
   constructor(isMinHeap: boolean = true, contents: [number, T][] = []) {
@@ -133,4 +154,39 @@ class Heap<T> implements PriorityQueue<T> {
   }
 }
 
-export default Heap;
+const solution = (
+  N: number,
+  road: [number, number, number][],
+  K: number
+): number => {
+  const adj = Array.from(Array(N), () => new Array<number>(N).fill(0));
+  for (const [start, end, cost] of road) {
+    if (adj[start - 1][end - 1] === 0 || adj[start - 1][end - 1] > cost) {
+      adj[start - 1][end - 1] = cost;
+      adj[end - 1][start - 1] = cost;
+    }
+  }
+  const dist = new Array<number>(N).fill(Infinity);
+  const visited = new Array<boolean>(N).fill(false);
+  dist[0] = 0;
+  const que = new Heap<number>();
+  que.add(0, 0);
+  while (!que.isEmpty()) {
+    const [, src] = que.remove();
+    if (visited[src] === true) {
+      continue;
+    }
+    visited[src] = true;
+    for (let dst = 0; dst < N; dst++) {
+      const cost = adj[src][dst];
+      if (cost !== 0) {
+        const alt = adj[src][dst] + dist[src];
+        if (dist[dst] > alt && visited[dst] === false) {
+          dist[dst] = alt;
+          que.add(alt, dst);
+        }
+      }
+    }
+  }
+  return dist.filter((value) => value <= K).length;
+};

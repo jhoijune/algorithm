@@ -24,8 +24,8 @@ class NumberHeap {
     return this;
   }
 
-  minOrMax(): number {
-    const [value] = this._data.minOrMax();
+  peek(): number {
+    const [value] = this._data.peek();
     return value;
   }
 

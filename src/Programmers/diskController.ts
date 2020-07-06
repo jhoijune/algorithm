@@ -1,7 +1,29 @@
-import PriorityQueue, { Item } from './PriorityQueue';
+import {} from 'module';
+import { size } from 'lodash';
 
-class Heap<T> implements PriorityQueue<T> {
+class Item<T> {
+  constructor(private _key: number, private _value: T) {}
+
+  get key(): number {
+    return this._key;
+  }
+
+  get value(): T {
+    return this._value;
+  }
+
+  set key(e: number) {
+    this._key = e;
+  }
+
+  set value(e: T) {
+    this._value = e;
+  }
+}
+
+class Heap<T> {
   private _data: Item<T>[];
+
   private _isMinHeap: boolean;
 
   constructor(isMinHeap: boolean = true, contents: [number, T][] = []) {
@@ -133,4 +155,48 @@ class Heap<T> implements PriorityQueue<T> {
   }
 }
 
-export default Heap;
+const swap = (arr: any[], i: number, j: number) => {
+  const temp = arr[i];
+  arr[i] = arr[j];
+  arr[j] = temp;
+};
+
+const solution = (jobs: [number, number][]): number => {
+  /**
+   * 디스크 컨트롤러
+   * time complexity: O(nlogn)
+   * space complexity: O(n)
+   */
+  const size = jobs.length;
+  const sorted = [...jobs];
+  for (let end = size - 1; end >= 1; end--) {
+    for (let index = 0; index < end; index++) {
+      const [start1, elapsed1] = sorted[index];
+      const [start2, elapsed2] = sorted[index + 1];
+      if (start1 < start2) {
+        swap(sorted, index, index + 1);
+      } else if (start1 === start2 && elapsed1 < elapsed2) {
+        swap(sorted, index, index + 1);
+      }
+    }
+  }
+  const times: number[] = [];
+  const heap = new Heap<number>();
+  let time = 0;
+  while (sorted.length !== 0 || !heap.isEmpty()) {
+    while (sorted.length !== 0 && sorted[sorted.length - 1][0] <= time) {
+      const [start, elapsed] = sorted.pop()!;
+      heap.add(elapsed, start);
+    }
+    if (heap.isEmpty()) {
+      time += 1;
+    } else {
+      const [elapsed, start] = heap.remove();
+      time += elapsed;
+      times.push(time - start);
+    }
+  }
+  return Math.floor(
+    times.reduce((prev, curr) => prev + curr, 0) / times.length
+  );
+};

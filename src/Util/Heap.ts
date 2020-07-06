@@ -1,7 +1,26 @@
-import PriorityQueue, { Item } from './PriorityQueue';
+class Item<T> {
+  constructor(private _key: number, private _value: T) {}
 
-class Heap<T> implements PriorityQueue<T> {
+  get key(): number {
+    return this._key;
+  }
+
+  get value(): T {
+    return this._value;
+  }
+
+  set key(e: number) {
+    this._key = e;
+  }
+
+  set value(e: T) {
+    this._value = e;
+  }
+}
+
+class Heap<T> {
   private _data: Item<T>[];
+
   private _isMinHeap: boolean;
 
   constructor(isMinHeap: boolean = true, contents: [number, T][] = []) {
@@ -132,5 +151,3 @@ class Heap<T> implements PriorityQueue<T> {
     }
   }
 }
-
-export default Heap;

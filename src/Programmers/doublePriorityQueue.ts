@@ -1,7 +1,29 @@
-import PriorityQueue, { Item } from './PriorityQueue';
+import {} from 'module';
+import { max } from 'lodash';
 
-class Heap<T> implements PriorityQueue<T> {
+class Item<T> {
+  constructor(private _key: number, private _value: T) {}
+
+  get key(): number {
+    return this._key;
+  }
+
+  get value(): T {
+    return this._value;
+  }
+
+  set key(e: number) {
+    this._key = e;
+  }
+
+  set value(e: T) {
+    this._value = e;
+  }
+}
+
+class Heap<T> {
   private _data: Item<T>[];
+
   private _isMinHeap: boolean;
 
   constructor(isMinHeap: boolean = true, contents: [number, T][] = []) {
@@ -133,4 +155,121 @@ class Heap<T> implements PriorityQueue<T> {
   }
 }
 
-export default Heap;
+const solution = (operations: string[]) => {
+  const minHeap = new Heap<number>();
+  const maxHeap = new Heap<number>(false);
+  for (const operation of operations) {
+    const [command, strNum] = operation.split(/\s/);
+    if (command === 'I') {
+      const number = Number(strNum);
+      if (minHeap.isEmpty() && maxHeap.isEmpty()) {
+        minHeap.add(number, number);
+      } else if (minHeap.isEmpty()) {
+        const [max] = maxHeap.peek();
+        if (number >= max) {
+          maxHeap.add(number, number);
+        } else {
+          minHeap.add(number, number);
+        }
+      } else if (maxHeap.isEmpty()) {
+        const [min] = minHeap.peek();
+        if (number <= min) {
+          minHeap.add(number, number);
+        } else {
+          maxHeap.add(number, number);
+        }
+      } else {
+        const [min] = minHeap.peek();
+        if (number <= min) {
+          minHeap.add(number, number);
+        } else {
+          maxHeap.add(number, number);
+        }
+      }
+    } else if (command === 'D' && strNum === '1') {
+      if (maxHeap.isEmpty() && !minHeap.isEmpty()) {
+        const temp = [];
+        while (!minHeap.isEmpty()) {
+          const [value] = minHeap.remove();
+          maxHeap.add(value, value);
+        }
+        maxHeap.remove();
+      } else if (!maxHeap.isEmpty()) {
+        maxHeap.remove();
+      }
+    } else {
+      if (minHeap.isEmpty() && !maxHeap.isEmpty()) {
+        while (!maxHeap.isEmpty()) {
+          const [value] = maxHeap.remove();
+          minHeap.add(value, value);
+        }
+        minHeap.remove();
+      } else if (!minHeap.isEmpty()) {
+        minHeap.remove();
+      }
+    }
+  }
+  console.log(minHeap);
+  console.log(maxHeap);
+  if (minHeap.isEmpty() && maxHeap.isEmpty()) {
+    return [0, 0];
+  } else if (!minHeap.isEmpty() && !maxHeap.isEmpty()) {
+    const [max] = maxHeap.peek();
+    const [min] = minHeap.peek();
+    return [max, min];
+  }
+  let min = Infinity;
+  let max = -Infinity;
+  while (!minHeap.isEmpty()) {
+    const [value] = minHeap.remove();
+    if (value < min) {
+      min = value;
+    }
+    if (value > max) {
+      max = value;
+    }
+  }
+  while (!maxHeap.isEmpty()) {
+    const [value] = maxHeap.remove();
+    if (value < min) {
+      min = value;
+    }
+    if (value > max) {
+      max = value;
+    }
+  }
+  return [max, min];
+};
+
+console.log(
+  solution([
+    'I 1',
+    'I 2',
+    'I 3',
+    'I 4',
+    'I 5',
+    'I 6',
+    'I 7',
+    'I 8',
+    'I 9',
+    'I 10',
+    'D 1',
+    'D -1',
+    'D 1',
+    'D -1',
+    'I 1',
+    'I 2',
+    'I 3',
+    'I 4',
+    'I 5',
+    'I 6',
+    'I 7',
+    'I 8',
+    'I 9',
+    'I 10',
+    'D 1',
+    'D -1',
+    'D 1',
+    'D -1',
+  ])
+);

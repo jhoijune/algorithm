@@ -1,7 +1,28 @@
-import PriorityQueue, { Item } from './PriorityQueue';
+import {} from 'module';
 
-class Heap<T> implements PriorityQueue<T> {
+class Item<T> {
+  constructor(private _key: number, private _value: T) {}
+
+  get key(): number {
+    return this._key;
+  }
+
+  get value(): T {
+    return this._value;
+  }
+
+  set key(e: number) {
+    this._key = e;
+  }
+
+  set value(e: T) {
+    this._value = e;
+  }
+}
+
+class Heap<T> {
   private _data: Item<T>[];
+
   private _isMinHeap: boolean;
 
   constructor(isMinHeap: boolean = true, contents: [number, T][] = []) {
@@ -133,4 +154,63 @@ class Heap<T> implements PriorityQueue<T> {
   }
 }
 
-export default Heap;
+const solution = (n: number, costs: [number, number, number][]): number => {
+  const adj = Array.from(
+    Array(n),
+    () => new Array<{ dst: number; cost: number }>()
+  );
+  for (const [src, dst, cost] of costs) {
+    adj[src].push({ dst, cost });
+    adj[dst].push({ dst: src, cost });
+  }
+  const dist = new Array<number>(n).fill(Infinity);
+  const parents = new Array<number>(n).fill(-1);
+  const pq = new Heap<number>();
+  dist[0] = 0;
+  for (let num = 0; num < n; num++) {
+    pq.add(dist[num], num);
+  }
+  while (!pq.isEmpty()) {
+    const [, vertex] = pq.remove();
+    const edges = adj[vertex];
+    for (const { dst, cost } of edges) {
+      const alt = dist[vertex] + cost;
+      if (alt < dist[dst]) {
+        const ex = dist[dst];
+        dist[dst] = alt;
+        parents[dst] = vertex;
+        pq.update(ex, dst, alt);
+      }
+    }
+  }
+  let answer = dist.reduce((prev, curr) => prev + curr, 0);
+  while (true) {
+    console.log(parents);
+    let index = 1;
+    while (index < n && parents[index] === 0) {
+      index += 1;
+    }
+    if (index === n) {
+      break;
+    }
+    index = 1;
+    while (index < n) {
+      if (parents[index] !== 0) {
+        answer -= dist[parents[index]];
+        parents[index] = parents[parents[index]];
+      }
+      index += 1;
+    }
+  }
+  return answer;
+};
+
+console.log(
+  solution(4, [
+    [0, 1, 1],
+    [0, 2, 2],
+    [1, 2, 5],
+    [1, 3, 1],
+    [2, 3, 8],
+  ])
+);

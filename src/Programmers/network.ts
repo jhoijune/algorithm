@@ -4,11 +4,11 @@ const solution = (n: number, computers: number[][]): number => {
   /**
    * 네트워크
    * -> 연결되어 있는 노드 집합의 개수
-   * time complexity: O(n^n)
+   * time complexity: O(n^2)
    * space complexity: O(n)
    */
   let answer = 0;
-  const visited = new Array(n).fill(false);
+  const visited = new Array<boolean>(n).fill(false);
   const dfs = (src: number) => {
     if (!visited[src]) {
       visited[src] = true;

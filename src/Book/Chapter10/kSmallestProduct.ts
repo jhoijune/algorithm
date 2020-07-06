@@ -29,7 +29,7 @@ const kSmallestProduct2 = (arr: number[], k: number) => {
   const heap = new Heap<number>(false);
   for (let index = 0; index < size; index++) {
     if (index >= k) {
-      const [value] = heap.minOrMax();
+      const [value] = heap.peek();
       if (value > arr[index]) {
         heap.remove();
         heap.add(arr[index], arr[index]);

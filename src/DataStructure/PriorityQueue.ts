@@ -25,7 +25,7 @@ interface PriorityQueue<T> {
 
   add(k: number, v: T): this;
 
-  minOrMax(): [number, T];
+  peek(): [number, T];
 
   remove(): [number, T];
 }

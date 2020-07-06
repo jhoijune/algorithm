@@ -5,7 +5,7 @@ class MedianHeap {
   private _maxHeap: NumberHeap = new NumberHeap(false);
 
   insert(value: number): this {
-    if (this._maxHeap.isEmpty() || this._maxHeap.minOrMax() >= value) {
+    if (this._maxHeap.isEmpty() || this._maxHeap.peek() >= value) {
       this._maxHeap.add(value);
     } else {
       this._minHeap.add(value);
@@ -26,10 +26,10 @@ class MedianHeap {
       throw Error('Heap is empty');
     }
     if (this._minHeap.size() === this._maxHeap.size()) {
-      return (this._minHeap.minOrMax() + this._maxHeap.minOrMax()) / 2;
+      return (this._minHeap.peek() + this._maxHeap.peek()) / 2;
     } else if (this._minHeap.size() > this._maxHeap.size()) {
-      return this._minHeap.minOrMax();
+      return this._minHeap.peek();
     }
-    return this._maxHeap.minOrMax();
+    return this._maxHeap.peek();
   }
 }
