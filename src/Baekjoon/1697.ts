@@ -1,11 +1,18 @@
+import { createInterface } from 'readline';
+
+const rl = createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
 class Queue<T> {
   static DEFAULT_CAPACITY: number = 10;
 
-  private _size: number = 0;
+  private _size: number = 0; // current number of elements
 
-  private _data: (T | null)[];
+  private _data: (T | null)[]; // generic array used for storage.
 
-  private _front: number = 0;
+  private _front: number = 0; // index of the front element
 
   constructor(capacity: number = Queue.DEFAULT_CAPACITY) {
     this._data = new Array(capacity);
@@ -62,3 +69,45 @@ class Queue<T> {
     return takenThing;
   }
 }
+
+const solution = (N: number, K: number) => {
+  if (N >= K) {
+    console.log(N - K);
+    return;
+  }
+  const numberSet = new Set<number>();
+  const queue = new Queue<[number, number]>();
+  queue.enqueue([N, 0]);
+  while (!queue.isEmpty()) {
+    const [number, cost] = queue.dequeue()!;
+    if (number === K) {
+      console.log(cost);
+      return;
+    }
+    if (number + 1 <= 100000 && !numberSet.has(number + 1)) {
+      numberSet.add(number + 1);
+      queue.enqueue([number + 1, cost + 1]);
+    }
+    if (number - 1 >= 0 && !numberSet.has(number - 1)) {
+      numberSet.add(number - 1);
+      queue.enqueue([number - 1, cost + 1]);
+    }
+    if (number * 2 <= 100000 && !numberSet.has(number * 2)) {
+      numberSet.add(number * 2);
+      queue.enqueue([number * 2, cost + 1]);
+    }
+  }
+};
+
+let N: number;
+let K: number;
+
+rl.on('line', (line) => {
+  const numbers = line.split(' ').map((v) => Number(v));
+  N = numbers[0];
+  K = numbers[1];
+  rl.close();
+}).on('close', () => {
+  solution(N, K);
+  process.exit();
+});

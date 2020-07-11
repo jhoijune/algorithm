@@ -3,7 +3,6 @@ import {} from 'module';
 const solution = (gems: string[]) => {
   /**
    * 보석 쇼핑
-   * TODO: 슬라이딩 윈도우
    */
   const size = gems.length;
   const set = new Set<string>(gems);
@@ -11,13 +10,20 @@ const solution = (gems: string[]) => {
   if (limit === 1) {
     return [1, 1];
   }
-  const range = [1, size + 1];
+  const range = [1, size];
   const map = new Map<string, number>();
+  let count = 0;
   let start = 0;
   let end = 0;
-  let count = 0;
-  while (end < size) {
-    while (end < size) {
+  while (start < size && end < size) {
+    if (count === limit) {
+      const exCount = map.get(gems[start])!;
+      if (exCount === 1) {
+        count -= 1;
+      }
+      map.set(gems[start], exCount - 1);
+      start++;
+    } else {
       const exCount = map.get(gems[end]);
       if (typeof exCount === 'undefined' || exCount === 0) {
         map.set(gems[end], 1);
@@ -25,26 +31,14 @@ const solution = (gems: string[]) => {
       } else {
         map.set(gems[end], exCount + 1);
       }
-      if (count === limit) {
-        break;
-      }
-      end += 1;
+      end++;
     }
-    while (count === limit && start !== end) {
-      if (range[1] - range[0] > end - start) {
-        range[0] = start + 1;
-        range[1] = end + 1;
-      }
-      const exCount = map.get(gems[start])!;
-      map.set(gems[start], exCount - 1);
-      start += 1;
-      if (exCount === 1) {
-        count -= 1;
-        break;
-      }
+    if (count === limit && end - start - 1 < range[1] - range[0]) {
+      range[0] = start + 1;
+      range[1] = end;
     }
   }
   return range;
 };
 
-console.log(solution(['AA', 'AB', 'AC', 'AA', 'AC']));
+console.log(solution(['ZZZ', 'YYY', 'NNNN', 'YYY', 'BBB']));

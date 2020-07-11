@@ -9,16 +9,18 @@ const solution = (
    * time compleixty: O(n^2 * m)
    * space complexity:  O(n^2)
    */
+  const FLAG_PILLAR = 1;
+  const FLAG_BEAM = 2;
   const board = Array.from(Array(n + 1), () =>
     new Array<number>(n + 1).fill(0)
   );
 
-  const isPillarExist = (x: number, y: number): boolean => {
-    return (board[x][y] & 1) === 1;
+  const isPillarExist = (x: number, y: number): number => {
+    return board[x][y] & FLAG_PILLAR;
   };
 
-  const isBeamExist = (x: number, y: number): boolean => {
-    return (board[x][y] & 2) === 2;
+  const isBeamExist = (x: number, y: number): number => {
+    return board[x][y] & FLAG_BEAM;
   };
 
   const isPillarPossible = (x: number, y: number): boolean => {
@@ -73,20 +75,20 @@ const solution = (
   for (const [x, y, type, isInstall] of build_frame) {
     if (isInstall) {
       if (type === 0 && isPillarPossible(x, y)) {
-        board[x][y] += 1;
+        board[x][y] ^= FLAG_PILLAR;
       } else if (type === 1 && isBeamPossible(x, y)) {
-        board[x][y] += 2;
+        board[x][y] ^= FLAG_BEAM;
       }
     } else {
       if (type === 0) {
-        board[x][y] -= 1;
+        board[x][y] ^= FLAG_PILLAR;
         if (!checkBoard()) {
-          board[x][y] += 1;
+          board[x][y] ^= FLAG_PILLAR;
         }
       } else {
-        board[x][y] -= 2;
+        board[x][y] ^= FLAG_BEAM;
         if (!checkBoard()) {
-          board[x][y] += 2;
+          board[x][y] ^= FLAG_BEAM;
         }
       }
     }

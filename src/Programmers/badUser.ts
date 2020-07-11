@@ -1,11 +1,11 @@
 import {} from 'module';
 
-function* _permutationsUtil(
-  arr: any[],
+function* _permutationsUtil<T>(
+  arr: T[],
   num: number,
   curr: any[],
   visited: boolean[]
-): IterableIterator<any[]> {
+): IterableIterator<T[]> {
   if (curr.length !== num) {
     const size = arr.length;
     for (let index = 0; index < size; index++) {
@@ -23,7 +23,7 @@ function* _permutationsUtil(
   }
 }
 
-function* permutations(arr: any[], num: number): IterableIterator<any[]> {
+function* permutations<T>(arr: T[], num: number): IterableIterator<T[]> {
   const size = arr.length;
   if (num > size) {
     throw Error('Invalid input');

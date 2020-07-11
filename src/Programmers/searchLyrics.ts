@@ -1,120 +1,107 @@
+import {} from 'module';
+import { StringDecoder } from 'string_decoder';
+
+declare global {
+  interface String {
+    reverse(): string;
+  }
+}
+
+String.prototype.reverse = function (this: string) {
+  return this.split('').reverse().join('');
+};
+
 class TrieNode {
-  char: string | null;
+  char: string;
 
-  parent: TrieNode | null;
+  count: number = 1;
 
-  children: (TrieNode | null)[] = [];
+  children: Map<string, TrieNode> = new Map();
 
-  childrenSize: number = 0;
-
-  map: Map<string, number> = new Map<string, number>();
-
-  isLastChar: boolean = false;
-
-  constructor(char: string | null, parent: TrieNode | null = null) {
+  constructor(char: string) {
     this.char = char;
-    this.parent = parent;
   }
 }
 
 class Trie {
-  private _root: TrieNode;
-
-  private _size: number;
+  root: TrieNode;
 
   constructor() {
-    this._root = new TrieNode(null);
-    this._size = 0;
+    this.root = new TrieNode('');
+    this.root.count = 0;
   }
 
-  /**
-   * Returns the number of nodes in the tree.
-   */
-  size(): number {
-    return this._size;
-  }
-
-  insert(element: string): this {
-    const string = element.toLowerCase();
-    let curr = this._root;
-    for (const char of string) {
-      const index = curr.map.get(char);
-      if (typeof index === 'undefined') {
-        const node = new TrieNode(char, curr);
-        curr.children.push(node);
-        curr.map.set(char, curr.children.length - 1);
-        curr.childrenSize += 1;
-        curr = node;
+  insert(word: string) {
+    this.root.count += 1;
+    const size = word.length;
+    let curr = this.root;
+    let loc = 0;
+    while (loc < size) {
+      const char = word[loc];
+      let node = curr.children.get(char);
+      if (typeof node === 'undefined') {
+        node = new TrieNode(char);
+        curr.children.set(char, node);
       } else {
-        const child = curr.children[index];
-        if (child === null) {
-          const node = new TrieNode(char, curr);
-          curr.children[index] = node;
-          curr.childrenSize += 1;
-          curr = node;
-        } else {
-          curr = child;
-        }
+        node.count += 1;
       }
+      curr = node;
+      loc += 1;
     }
-    if (!curr.isLastChar) {
-      curr.isLastChar = true;
-      this._size += 1;
-    }
-    return this;
   }
 
-  private _verify(node: TrieNode, char: string): TrieNode | null {
-    const index = node.map.get(char);
-    if (typeof index === 'undefined') {
-      return null;
-    }
-    const child = node.children[index];
-    if (child === null) {
-      return null;
-    }
-    return child;
-  }
-
-  private _queryUtil(node: TrieNode, string: string, loc: number): number {
-    if (string.length === loc && node.isLastChar) {
-      return 1;
-    } else if (string.length === loc) {
-      return 0;
-    }
-    let result = 0;
-    if (string[loc] === '?') {
-      for (const children of node.children) {
-        if (children !== null) {
-          result += this._queryUtil(children, string, loc + 1);
-        }
+  returnMatched(str: string): number {
+    const size = str.length;
+    let curr = this.root;
+    let loc = 0;
+    while (loc < size) {
+      const char = str[loc];
+      if (char === '?') {
+        return curr.count;
       }
-    } else {
-      const next = this._verify(node, string[loc]);
-      if (next !== null) {
-        result += this._queryUtil(next, string, loc + 1);
+      const node = curr.children.get(char);
+      if (typeof node === 'undefined') {
+        return 0;
       }
+      curr = node;
+      loc += 1;
     }
-    return result;
-  }
-
-  query(element: string): number {
-    const string = element.toLowerCase();
-    const curr = this._root;
-    const result = this._queryUtil(curr, string, 0);
-    return result;
+    return curr.count;
   }
 }
 
 const solution = (words: string[], queries: string[]): number[] => {
-  const trie = new Trie();
-  for (const word of words) {
-    trie.insert(word);
-  }
+  /**
+   * 가사 검색
+   */
   const answer: number[] = [];
+  const tries: (null | Trie)[] = new Array(10001).fill(null);
+  const reverseTries: (null | Trie)[] = new Array(10001).fill(null);
+  for (const word of words) {
+    const size = word.length;
+    if (tries[size] !== null) {
+      tries[size]!.insert(word);
+      reverseTries[size]!.insert(word.reverse());
+    } else {
+      const trie = new Trie();
+      trie.insert(word);
+      const reverseTrie = new Trie();
+      reverseTrie.insert(word.reverse());
+      tries[size] = trie;
+      reverseTries[size] = reverseTrie;
+    }
+  }
   for (const query of queries) {
-    const count = trie.query(query);
-    answer.push(count);
+    const size = query.length;
+    if (tries[size] === null) {
+      answer.push(0);
+    } else {
+      if (query[0] === '?') {
+        answer.push(reverseTries[size]!.returnMatched(query.reverse()));
+      } else {
+        answer.push(tries[size]!.returnMatched(query));
+      }
+    }
   }
   return answer;
 };
