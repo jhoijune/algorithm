@@ -1,5 +1,4 @@
 import {} from 'module';
-import { StringDecoder } from 'string_decoder';
 
 declare global {
   interface String {
