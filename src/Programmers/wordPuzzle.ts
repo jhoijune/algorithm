@@ -1,25 +1,30 @@
 import {} from 'module';
-import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
-const solution = (strs: string[], t: string) => {
+const solution = (strs: string[], t: string): number => {
   const size = t.length;
-  const table: number[] = [];
-  for (let index = 0; index < size; index++) {
-    const target = t.slice(0, index + 1);
-    if (strs.includes(target)) {
-      table[index] = 1;
-      continue;
-    }
-    let min = size + 1;
-    for (let idx = 0; idx < index; idx++) {
-      const sliced = t.slice(0, idx + 1);
+  let queue: number[] = [];
+  let count = 0;
+  const used = new Array<boolean>(size + 1).fill(false);
+  queue.push(0);
+  while (queue.length !== 0) {
+    const newQueue: number[] = [];
+    for (const start of queue) {
+      if (start === size) {
+        return count;
+      }
       for (const str of strs) {
-        if (sliced + str === target) {
-          min = Math.min(min, table[idx] + 1);
+        const end = start + str.length;
+        const sliced = t.slice(start, end);
+        if (str === sliced && !used[end]) {
+          used[end] = true;
+          newQueue.push(end);
         }
       }
     }
-    table[index] = min;
+    queue = newQueue;
+    count += 1;
   }
-  return table[size - 1] > size ? -1 : table[size - 1];
+  return -1;
 };
+
+console.log(solution(['app', 'ap', 'p', 'l', 'e', 'ple', 'pp'], 'apple'));
