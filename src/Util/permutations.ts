@@ -1,18 +1,19 @@
 function* _permutationsUtil<T>(
   arr: T[],
   num: number,
-  curr: any[],
+  curr: T[],
   visited: boolean[]
 ): IterableIterator<T[]> {
   if (curr.length !== num) {
     const size = arr.length;
     for (let index = 0; index < size; index++) {
       if (!visited[index]) {
-        const concat = [...curr, arr[index]];
+        curr.push(arr[index]);
         visited[index] = true;
-        for (const value of _permutationsUtil(arr, num, concat, visited)) {
+        for (const value of _permutationsUtil(arr, num, curr, visited)) {
           yield value;
         }
+        curr.pop();
         visited[index] = false;
       }
     }
