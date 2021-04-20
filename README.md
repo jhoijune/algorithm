@@ -1,1 +1,3 @@
-나의 알고리즘 문제 풀이들
+# Algorithm
+
+My JavaScript data structure and algorithm problem solving

@@ -1,13 +1,4 @@
-import {} from 'module';
-
-class ListNode {
-  val: number;
-  next: ListNode | null;
-  constructor(val: number = 0, next: ListNode | null = null) {
-    this.val = val;
-    this.next = next;
-  }
-}
+import ListNode from './ListNode';
 
 const mergeTwoLists = function (
   l1: ListNode | null,
